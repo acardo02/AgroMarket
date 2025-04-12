@@ -1,18 +1,10 @@
-//#region styles
-import '../index.css';
-//#endregion
-//#region imports
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import { Routes } from './helpers/routes.helper';
-import Axios from 'axios';
-//#endregion
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
 
-//Axios.defaults.baseURL = 'http://localhost:3000';
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <RouterProvider router={Routes} />
-  </React.StrictMode>
-);
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
