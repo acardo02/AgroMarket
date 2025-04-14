@@ -6,7 +6,7 @@ const Button = ({
     disabled = false,
     className = '',
 }) => {
-    const baseStyle = 'px-4 py-2 rounded font-semibold transition duration-200 ease-in-out'
+    const baseStyle = 'px-4 py-3 rounded font-semibold transition duration-200 ease-in-out'
     const variants = {
         primary: 'text-white font-poppins bg-primaryAltDark',
         secondary: 'bg-gray-300 text-black hover:bg-gray-400',
