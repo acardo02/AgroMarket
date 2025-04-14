@@ -41,7 +41,7 @@ const LoginForm = () => {
                 required
             />
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <Button type="submit" className="w-5/6 hover:bg-hoverBtnColor hover:cursor-pointer" >Iniciar Sesion</Button>
+            <Button type="submit" className="w-5/6" >Iniciar Sesion</Button>
             <p className="text-white font-poppins font-bold">¿No tienes cuenta? <span className="text-black font-bold "><a href="/register">Registrate</a></span></p>
         </form>
     )

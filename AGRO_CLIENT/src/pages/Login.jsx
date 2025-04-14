@@ -4,7 +4,6 @@ import Logo from "../assets/AGROMARKET.svg"
 
 const Login = () => {
 
-
     return (
         <div className="flex flex-row">
             <div className=" flex flex-col justify-center items-center gap-14 w-2xl login-container bg-primaryColor">
