@@ -15,24 +15,37 @@ const RegisterForm = () => {
 
     const navigate = useNavigate()
 
+    const phoneRegex = /^[267]\d{7}$/
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._-])[A-Za-z\d@$!%*?&._-]{8,}$/
+
     const handleSubmit = async (e) => {
         e.preventDefault()
+        
+        setErrors({})
+
+        if(!phoneRegex.test(phoneNumber)) {
+            setErrors({phoneNumber: 'El numero de telefono no es valido'})
+            return
+        }
 
         if (password !== cPassword) {
             setErrors({cPassword: 'Las contraseñas no coinciden'})
             return
-        }
+        } else if (!passwordRegex.test(password)) {
+            setErrors({password: 'Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.'})
+            return
+        } 
 
         try {
             const response = await registerService(username, email, address, phoneNumber, password)
             if (response.success) {
                 navigate('/')
             } else {
-                setErrors({ email: 'Error al registrarse. Intenta con otro correo.' })
+                setErrors({ default: 'Error al registrarse.' })
             }
         } catch(err) {
             console.error('Error al registarse:', err)
-            setErrors({ email: 'Hubo un error al registrarse' })
+            setErrors({ default: 'Hubo un error al registrarse' })
         }
     }
 
@@ -51,7 +64,6 @@ const RegisterForm = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                error={errors.email}
             />
             <Input
                 type="text"
@@ -65,6 +77,7 @@ const RegisterForm = () => {
                 placeHolder="Teléfono"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
+                error={errors.phoneNumber}
                 required
             />
             <Input
@@ -72,6 +85,7 @@ const RegisterForm = () => {
                 placeHolder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                error={errors.password}
                 required
             />
             <Input
@@ -82,8 +96,9 @@ const RegisterForm = () => {
                 required
                 error={errors.cPassword}
             />
+            {errors.default && <p style={{ color: '#5e0502', fontFamily: 'poppins', fontWeight: 'bold' }}>{errors.default}</p>}
             <Button type="submit" className="w-5/6">Registrate</Button>
-            <p className="text-white font-poppins font-bold ">¿Ya tienes una cuenta? <span className="text-black font-bold hover:text-gray-900 "><a href="/register">Inicia Sesión</a></span></p>
+            <p className="text-white font-poppins font-bold ">¿Ya tienes una cuenta? <span className="text-black font-bold hover:text-gray-900 "><a href="/">Inicia Sesión</a></span></p>
         </form>   
     )
 }
