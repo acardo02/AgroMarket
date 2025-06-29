@@ -17,6 +17,7 @@ import transactionRoute from './src/routes/transaction.route.js'
 import creditsRoute from './src/routes/credits.route.js'
 import cartRoute from './src/routes/cart.route.js';
 import orderRoute from './src/routes/order.route.js';
+import { swaggerUi, swaggerSpec } from './src/config/swagger.js';
 //#endregion
 
 //variables
@@ -42,7 +43,7 @@ app.use('/api/v1/transactions', transactionRoute);
 app.use('/api/v1/credits', creditsRoute);
 app.use('/api/v1/cart', cartRoute);
 app.use('/api/v1/orders', orderRoute);
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (req, res) => {
     res.json({
         message: 'Welcome to Agromarket API'
