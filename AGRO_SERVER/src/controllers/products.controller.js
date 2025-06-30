@@ -1,4 +1,4 @@
-import {Product} from  '../models/Product.js'
+import {Product} from  '../models/product.js'
 import {MeasureUnit} from  '../models/measureUnit.js'
 import {Category} from  '../models/productCategory.js'
 import {User} from  '../models/user.js'
@@ -11,7 +11,7 @@ export const userCreatedProduct = async (req, res) => {
     try {
         const authToken = req.headers.authorization && req.headers.authorization.split(" ")[1];
         const { id } = jwt.verify(authToken, process.env.SECRET_KEY)
-        const { name, description, price, quantity, stock,category, measureUnit, image } = req.body;
+        const { name, description, price, stock, category, measureUnit, image } = req.body;
         const categoryName = await Category.findOne({name:
             category});
         const measureUnitName = await MeasureUnit.findOne({name:
@@ -20,7 +20,6 @@ export const userCreatedProduct = async (req, res) => {
             name,
             description,
             price,
-            quantity,
             stock,
             category: categoryName._id,
             measureUnit: measureUnitName._id,
@@ -83,7 +82,7 @@ export const updateProductCreatedByUser = async (req, res) => {
     try {
         const authToken = req.headers.authorization && req.headers.authorization.split(" ")[1];
         const { id } = jwt.verify(authToken, process.env.SECRET_KEY)
-        const { name, description, price, category, measureUnit, image } = req.body;
+        const { name, description, price, stock, category, measureUnit, image } = req.body;
         const categoryName = await Category.findOne({name:
             category});
         const measureUnitName = await MeasureUnit.findOne({name:
@@ -93,6 +92,7 @@ export const updateProductCreatedByUser = async (req, res) => {
             product.name = name? name: product.name;
             product.description = description? description: product.description;
             product.price = price? price: product.price;
+            product.stock = stock? stock: product.stock;
             product.category = categoryName? categoryName._id: product.category;
             product.measureUnit = measureUnitName? measureUnitName._id: product.measureUnit;
             product.image = image? image: product.image;
@@ -167,5 +167,41 @@ export const buyProductWithUserCredit = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Error de server" });
+    }
+}
+
+export const getNearbyProducts = async (req, res) => {
+    try {
+        const authToken = req.headers.authorization && req.headers.authorization.split(" ")[1];
+        const { id: userId } = jwt.verify(authToken, process.env.SECRET_KEY)
+
+        const user = await User.findById(userId);
+
+        if (!user || !user.location) {
+            return res.status(400).json({ message: "User location not found" });
+        }
+        const maxDistanceInMeters = req.query.maxDistance || 15000;
+
+        const nearbyUsers = await User.find({
+            location: {
+                $near: {
+                    $geometry: user.location,
+                    $maxDistance: maxDistanceInMeters
+                }
+            }
+        });
+
+        const nearbyUserIds = nearbyUsers.map(u => u._id);
+
+        // Buscar productos de esos usuarios
+        const products = await Product.find({ user: { $in: nearbyUserIds } })
+            .populate('category')
+            .populate('measureUnit');
+
+        return res.status(200).json({ products });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 }

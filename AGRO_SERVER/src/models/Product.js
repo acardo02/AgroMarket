@@ -16,7 +16,7 @@ const productSchema = new Schema({
     },
     quantity: {
         type: Number,
-        required: true
+        required: false
     },
     image:{
         type: String,
@@ -29,10 +29,6 @@ const productSchema = new Schema({
     measureUnit: {
         type: Schema.Types.ObjectId,
         ref: 'MeasureUnit'
-    },
-    image:{
-        type: String,
-        required: false
     },
     measurement: {
         type: Schema.Types.ObjectId,

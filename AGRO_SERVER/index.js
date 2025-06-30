@@ -15,6 +15,8 @@ import uploadRoute from './src/routes/upload.route.js'
 import getDataRoute from './src/routes/getData.route.js';
 import transactionRoute from './src/routes/transaction.route.js'
 import creditsRoute from './src/routes/credits.route.js'
+import cartRoute from './src/routes/cart.route.js';
+import orderRoute from './src/routes/order.route.js';
 //#endregion
 
 //variables
@@ -38,6 +40,8 @@ app.use('/api/v1/upload', uploadRoute);
 app.use('/api/v1/data', getDataRoute);
 app.use('/api/v1/transactions', transactionRoute);
 app.use('/api/v1/credits', creditsRoute);
+app.use('/api/v1/cart', cartRoute);
+app.use('/api/v1/orders', orderRoute);
 
 app.get('/', (req, res) => {
     res.json({
